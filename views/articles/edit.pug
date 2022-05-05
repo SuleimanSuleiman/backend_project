@@ -1,0 +1,24 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(http-equiv="X-UA-Compatible", content="IE=edge")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title Document
+        link(rel="stylesheet", href="/bootstrap.min.css")
+        script(src="/bootstrap.min.js" defer) 
+    body 
+        .container 
+            h1.mb-4 edit Article 
+            form(action=`/articles/${article.id}?_method=put` method='POST')
+                .form-group 
+                    label(for="title") Title
+                    input(type= "text" name='title' required class = 'form-control')
+                .form-group 
+                    label(for="description") description
+                    textarea(name="description" required class = 'form-control')
+                .form-group 
+                    label(for="markdown") Markdown
+                    textarea(name="markdown" required class = 'form-control')
+                button(type='submit' class='btn btn-primary mt-3') Save
+                a(href="/articles" class='btn btn-secondary mx-3 mt-3') Cancel 
