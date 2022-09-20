@@ -4,16 +4,34 @@ const routingArticle = require('./routes/articles')
 const mongoose = require('mongoose')
 const Article = require('./models/Article')
 const methodOverride = require('method-override')
+const authRouting = require('./routes/auth')
+const cookieParser = require('cookie-parser')
 
 
-mongoose.connect('mongodb://localhost/blog')
+const connect = async () =>{
+    try{
+        await mongoose.connect('mongodb://localhost/testing')
+        console.log('connect with database')
+    }catch{
+        throw Error('incurrect connect')
+    }
+}
+
+mongoose.connection.on('disconnected', () => {
+    console.log(`mongodb disconnected`)
+})
+
+mongoose.connection.on('connected', () => {
+    console.log(`mongodb connected`)
+})
+
 
 
 app.use(express.static('./public'))
 app.set('view engine' , 'pug')
 app.use(express.urlencoded({extended: false}))
 app.use(methodOverride('_method'))
-
+app.use(cookieParser())
 
 app.get('/articles' ,async (req , res) =>{
 
@@ -23,7 +41,9 @@ app.get('/articles' ,async (req , res) =>{
 })
 
 app.use('/articles',routingArticle)
+app.use('/auth',authRouting)
 
 app.listen(5000,() =>{
+    connect()
     console.log('server running')
 })

@@ -1,8 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const Article = require('./../models/Article')
+const {verfityUser} = require('../utils/verityUser.js')
 
-router.get('/new' , (req,res) =>{
+router.get('/new' ,verfityUser,(req,res) =>{
     res.render('./../views/articles/new.pug')
 })
 
