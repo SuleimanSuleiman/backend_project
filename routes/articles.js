@@ -1,8 +1,14 @@
 const express = require('express')
 const router = express.Router()
 const Article = require('./../models/Article')
+const passport = require('passport')
+require('../utils/auth')(passport)
 
-router.get('/new' , (req,res) =>{
+router.get('/new' ,
+passport.authenticate('jwt',{
+    session: false
+})
+,(req,res) =>{
     res.render('./../views/articles/new.pug')
 })
 
