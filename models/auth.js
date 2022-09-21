@@ -10,12 +10,25 @@ const UserSchema = new mongoose.Schema({
     },
     email:{
         type:String
+    },
+    google:{
+        id:{
+            type:String
+        },
+        email:{
+            type: String
+        },
+        name:{
+            type: String
+        }
     }
 })
 
 UserSchema.pre('save',async function(){
-    const salt = await bcryptjs.genSalt()
-    this.password = await bcryptjs.hash(this.password,salt)
+    if(this.password){
+        const salt = await bcryptjs.genSalt()
+        this.password = await bcryptjs.hash(this.password,salt)
+    }
 })
 
 UserSchema.statics.login = async function(email,password){

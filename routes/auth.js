@@ -1,6 +1,9 @@
 const router = require('express').Router()
 const User = require('../models/auth')
 const jwt = require('jsonwebtoken')
+const passport = require('passport')
+const session = require('express-session')
+
 
 router.get('/register', (req, res) => {
     try {
@@ -68,5 +71,22 @@ router.get('/logout', (req, res) => {
     })
     res.redirect('/auth/login')
 })
+
+//AUTH WITH GOOGLE USING PASSPORT
+router.use(session({
+    secret: 'secret'
+}));
+router.use(passport.initialize())
+router.use(passport.session())
+
+
+require('../utils/auth')(passport)
+
+router.get('/google',
+    passport.authenticate('google', {
+        scope: ['email', 'profile']
+    }))
+
+
 
 module.exports = router

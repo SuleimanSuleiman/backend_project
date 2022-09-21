@@ -1,6 +1,12 @@
 const jwt = require('jsonwebtoken')
 const User = require('../models/auth')
 
+
+
+
+/////////////////////////////////////////////////////////////////////////////////
+// we will not use this function beacuse we used passport jwt to verify the token/
+/////////////////////////////////////////////////////////////////////////////////
 module.exports.verfityUser = async (req,res,next) =>{
     const token = req.cookies.jwt
     if(token){
