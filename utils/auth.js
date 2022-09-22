@@ -4,7 +4,7 @@ const GoogleStrategy = require("passport-google-oauth2").Strategy
 const JwtStratery = require('passport-jwt').Strategy
 
 
-module.exports = (passport) =>{
+module.exports = (passport) => {
     passport.use(
         new GoogleStrategy({
                 clientID: process.env.GOOGLE_CLIENT_ID,
@@ -33,36 +33,42 @@ module.exports = (passport) =>{
     )
     passport.use(
         new JwtStratery({
-            jwtFromRequest: (req) =>{
-                let token = new String()
-                if(req.cookies.jwt){
-                    token = req.cookies.jwt
-                }
-                return token
+                jwtFromRequest: (req) => {
+                    let token = new String()
+                    if (req.cookies.jwt) {
+                        token = req.cookies.jwt
+                    }
+                    return token
+                },
+                secretOrKey: 'secret'
             },
-            secretOrKey: 'secret'
-        },
-        async (jwtPayload,done) =>{
-            try{
-                let theUser = new Object()
-                if(jwtPayload.user){
-                    theUser = await User.findOne({'google.id':jwtPayload.user.google.id})
-                }else{
-                    theUser = await User.findOne({id:jwtPayload.id})
+            async (jwtPayload, done) => {
+                try {
+                    let theUser = new Object()
+                    if (jwtPayload.user) {
+                        theUser = await User.findOne({
+                            'google.id': jwtPayload.user.google.id
+                        })
+                    } else {
+                        theUser = await User.aggregate([{
+                            $match: {
+                                _id: jwtPayload.id,
+                                vefity: true
+                            }
+                        }])
+                    }
+                    if (theUser) return done(null, theUser)
+                    return done(null, false)
+                } catch (err) {
+                    return done(err, false)
                 }
-
-                if(theUser) return done(null,theUser)
-                return done(null,false)
-            }catch(err){
-                return done(err,false)
-            }
-        })
+            })
     )
 }
-passport.serializeUser((user,done) =>{
-    done(null,user)
+passport.serializeUser((user, done) => {
+    done(null, user)
 })
 
-passport.deserializeUser((user,done) =>{
-    done(null,user)
+passport.deserializeUser((user, done) => {
+    done(null, user)
 })

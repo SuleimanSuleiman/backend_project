@@ -65,17 +65,9 @@ app.get('/google/callback',
         res.cookie('jwt', token, {
             httpOnly: true
         })
-        res.redirect('/articles')
+        res.redirect('/articles/new')
     }
 );
-
-app.use('/test',
-    passport.authenticate('jwt', {
-        session: false
-    }),
-    function (req, res) {
-        res.redirect('/articles/new')
-    })
 
 
 app.listen(4000, () => {
