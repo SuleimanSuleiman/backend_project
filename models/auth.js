@@ -11,6 +11,9 @@ const UserSchema = new mongoose.Schema({
     email:{
         type:String
     },
+    vefity:{
+        type: Boolean,
+    },
     google:{
         id:{
             type:String
